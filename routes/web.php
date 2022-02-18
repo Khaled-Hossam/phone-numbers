@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerPhoneController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,11 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-     dd(
-        //   \DB::select('show tables;')
-          \DB::table('customer')->get()
-     );
-    // return phpinfo();
+Route::get('/', CustomerPhoneController::class);
+Route::get('/welcome', function () {
     return view('welcome');
 });
