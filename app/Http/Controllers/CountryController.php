@@ -15,7 +15,6 @@ class CountryController extends Controller
      */
     public function countriesListForDropdown()
     {
-
         return CountryListResource::collection(CountryEnum::DATA);
     }
 }

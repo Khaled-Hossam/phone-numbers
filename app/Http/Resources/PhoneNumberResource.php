@@ -20,7 +20,5 @@ class PhoneNumberResource extends JsonResource
             'is_valid_phone' => $this->is_valid_phone,
             'phone_without_country_code' => $this->phone_without_country_code,
         ];
-
-        return parent::toArray($request);
     }
 }
