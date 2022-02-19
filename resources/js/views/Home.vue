@@ -7,6 +7,7 @@
           <div>
               <div class="mb-4">
                 <b-dropdown text="Select Country">
+                    <b-dropdown-item @click="filterByCountry(null)">All</b-dropdown-item>
                     <b-dropdown-item v-for="country in countriesList" :key="country.country_code"
                         @click="filterByCountry(country.country_code)"
                     >
@@ -15,6 +16,7 @@
                 </b-dropdown>
 
                 <b-dropdown text="Select phone validity" class="mx-3">
+                    <b-dropdown-item @click="filterByPhoneValidity(null)">All</b-dropdown-item>
                     <b-dropdown-item @click="filterByPhoneValidity(1)">Valid phone numbers</b-dropdown-item>
                     <b-dropdown-item @click="filterByPhoneValidity(0)">Invalid phone numbers</b-dropdown-item>
                 </b-dropdown>

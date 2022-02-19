@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\CustomerPhoneController;
 use Illuminate\Support\Facades\Route;
 
 /*
