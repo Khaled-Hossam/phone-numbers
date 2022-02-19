@@ -44,7 +44,6 @@ export default {
             phoneNumbers: [],
             phoneValidityFilter: null,
             countryFilter: null,
-
             countriesList: [],
 
             fields: [
@@ -61,8 +60,6 @@ export default {
                 {
                     key: 'country_code',
                     sortable: true,
-                    // Variant applies to the whole column, including the header and footer
-                    // variant: 'danger'
                 },
                  {
                     key: 'phone_without_country_code',
@@ -81,20 +78,15 @@ export default {
         getPhoneNumbersData(){
             // conditionally add filters to data only in case they exist
             let data = {
-            // 'page' : page,
-            // 'page_size' : process.env.MIX_PAGINATION_PAGE_SIZE,
             ...(this.phoneValidityFilter != null && {'is_valid_phones' : this.phoneValidityFilter} ),
             ...(this.countryFilter && {'country_code' : this.countryFilter} ),
             };
 
             axios.get('/api/phone-numbers', {params: data})
             .then( (response) => {
-                // handle success
-                console.log(response.data);
                 this.phoneNumbers = response.data.data;
             })
             .catch(function (error) {
-                // handle error
                 console.log(error);
             });
         },
@@ -118,9 +110,6 @@ export default {
             this.countryFilter = countryCode;
             this.getPhoneNumbersData();
         },
-
-
-
 
 
     },
