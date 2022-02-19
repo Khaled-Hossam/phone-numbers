@@ -5,7 +5,29 @@
       <div class="col-md-8">
         <div class="card">
           <div>
-            <b-table striped hover :items="items"></b-table>
+              <div class="mb-4">
+                <b-dropdown text="Select Country">
+                    <b-dropdown-item v-for="country in countriesList" :key="country.country_code"
+                        @click="filterByCountry(country.country_code)"
+                    >
+                        {{country.country_name}}
+                    </b-dropdown-item>
+                </b-dropdown>
+
+                <b-dropdown text="Select phone validity" class="mx-3">
+                    <b-dropdown-item @click="filterByPhoneValidity(1)">Valid phone numbers</b-dropdown-item>
+                    <b-dropdown-item @click="filterByPhoneValidity(0)">Invalid phone numbers</b-dropdown-item>
+                </b-dropdown>
+            </div>
+
+            <b-table striped hover :items="phoneNumbers" :fields="fields">
+                <!-- A custom formatted State column -->
+                <template #cell(is_valid_phone)="data">
+                    <b>
+                        {{ data.value ? 'Ok' : 'NOK' }}
+                    </b>
+                </template>
+            </b-table>
         </div>
         </div>
       </div>
@@ -17,13 +39,88 @@
 export default {
     data() {
         return {
-            items: [
-            { age: 40, first_name: 'Dickerson', last_name: 'Macdonald' },
-            { age: 21, first_name: 'Larsen', last_name: 'Shaw' },
-            { age: 89, first_name: 'Geneva', last_name: 'Wilson' },
-            { age: 38, first_name: 'Jami', last_name: 'Carney' }
-            ]
+            phoneNumbers: [],
+            phoneValidityFilter: null,
+            countryFilter: null,
+
+            countriesList: [],
+
+            fields: [
+                {
+                    key: 'country',
+                    sortable: true,
+                },
+                {
+                    key: 'is_valid_phone',
+                    label: 'State',
+                    sortable: true,
+                    tdClass: (value) =>  value ? 'bg-success' : 'bg-warning',
+                },
+                {
+                    key: 'country_code',
+                    sortable: true,
+                    // Variant applies to the whole column, including the header and footer
+                    // variant: 'danger'
+                },
+                 {
+                    key: 'phone_without_country_code',
+                    label: 'Phone num.',
+                },
+            ],
         }
-    }
+    },
+
+    created(){
+        this.getPhoneNumbersData();
+        this.getCountriesList();
+    },
+
+    methods:{
+        getPhoneNumbersData(){
+            // conditionally add filters to data only in case they exist
+            let data = {
+            // 'page' : page,
+            // 'page_size' : process.env.MIX_PAGINATION_PAGE_SIZE,
+            ...(this.phoneValidityFilter != null && {'is_valid_phones' : this.phoneValidityFilter} ),
+            ...(this.countryFilter && {'country_code' : this.countryFilter} ),
+            };
+
+            axios.get('/api/phone-numbers', {params: data})
+            .then( (response) => {
+                // handle success
+                console.log(response.data);
+                this.phoneNumbers = response.data.data;
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+        },
+
+        getCountriesList(){
+            axios.get('/api/countries-list')
+            .then( (response) => {
+                this.countriesList = response.data.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        },
+
+        filterByPhoneValidity(status){
+            this.phoneValidityFilter = status;
+            this.getPhoneNumbersData();
+        },
+
+        filterByCountry(countryCode){
+            this.countryFilter = countryCode;
+            this.getPhoneNumbersData();
+        },
+
+
+
+
+
+    },
 }
 </script>
